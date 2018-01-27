@@ -1,0 +1,22 @@
+Steps
+1. We need to start Selenium Standalone server
+
+
+D:
+java -jar selenium-server-standalone-2.52.0.jar -role hub
+
+http://localhost:4444/grid/console/#.
+
+2. Register Appium server for Device 1
+
+cd Appium\node_modules\appium\bin
+D:
+node appium.js -a localhost -p 4567 --udid 491f18f4 -bp 5556  --nodeconfig "D:\d1.json" -g "D:\appium_1.log" --session-override
+
+
+3. Register Appium server for Device 2
+
+cd Appium\node_modules\appium\bin
+D:
+node appium.js -a localhost -p 4568 --udid 42030213ccdfa100 -bp 5557  --nodeconfig "D:\d2.json" -g "D:\appium_2.log" --session-override
+

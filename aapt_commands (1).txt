@@ -1,0 +1,19 @@
+
+*****************************************
+adb shell pm list packages -f| findstr bigbasket
+
+D:\Android\sdk\build-tools\22.0.1\
+
+adb pull /data/app/com.bigbasket.mobileapp
+
+aapt dump badging com.bigbasket.mobileapp-4.apk | findstr launchable-activity:
+
+******************************************************
+adb shell pm list packages -f| findstr ola
+
+adb pull /data/app/com.olacabs.customer-10.apk
+
+aapt dump badging com.olacabs.customer | findstr launchable-activity:
+
+
+

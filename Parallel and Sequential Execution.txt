@@ -1,0 +1,96 @@
+1. Create a Class Base_Class_mort having the annotation @BeforeClass and @Parameters({"deviceID"})
+
+2. @Parameters({"deviceID"}) is pointing the testng_parallel_exec.xml
+
+3. Inside xml check <parameter name="deviceID" value="d1"></parameter>
+
+4. Class Base_Class_mort gives the details of two devices
+	if(deviceID.equals("d1"))
+		{
+			System.out.println("Executing in Device1");
+			
+			capabilities.setCapability("deviceName","GT-I9300I");
+			capabilities.setCapability("platformName","Android");
+			capabilities.setCapability("platformVersion","4.4.4");
+		}
+		else if(deviceID.equals("d2"))
+		{
+			System.out.println("Executing in Device2");
+			
+			capabilities.setCapability("deviceName", "SM-G350E");
+			capabilities.setCapability("platformName", "Android");
+			capabilities.setCapability("platformVersion", "4.4.2");
+			
+		}
+
+5. Above details will be passed to the Hub or Server of http://localhost:4444/wd/hub
+   Both device should be passed to the Server.
+   driver= new AndroidDriver(new URL("http://localhost:4444/wd/hub"), capabilities);
+
+6. Create the driver class where you are passing the values to the app
+	@Test
+	public void testmort()
+	{
+		String Expected_Result="222.44";
+		System.out.println("Expected Result is "+Expected_Result);
+		
+		//Enter amount, years and Interest
+		driver.findElementById("com.boondoggle.mortcalc:id/var_amount").sendKeys("10000");
+		driver.findElementById("com.boondoggle.mortcalc:id/var_years").sendKeys("5");
+		driver.findElementById("com.boondoggle.mortcalc:id/var_interest").sendKeys("12");
+		
+		//click on calculate
+		driver.findElementById("com.boondoggle.mortcalc:id/buttoncalc").click();
+				
+		//Get the output
+		
+		String Output = driver.findElementById("com.boondoggle.mortcalc:id/var_mortgage").getText();
+		System.out.println("Output is  " +Output);
+		
+		String Actual_Result = Output.replace("$", "");
+		System.out.println("Actual Result is "+Actual_Result);
+		
+		//Validation
+		
+		if(Actual_Result.equals(Expected_Result))
+		{
+			System.out.println("Pass");
+		}
+		else
+		{
+			System.out.println("Fail");
+		}
+		
+7. To execute parallelly check the tag  in xml parallel= test
+   <suite name="Suite" parallel="tests">
+
+8. To Execute
+   We need to start Selenium Standalone server
+
+9. Download selenium-server-standalone-2.52.0.jar and if you store it in a D drive
+   Execute below command in command prompt.
+   D:java -jar selenium-server-standalone-2.52.0.jar -role hub
+   Hub is up and running message will be displayed.
+   To see in the ui http://localhost:4444/grid/console/#.
+   
+
+10.Register to hub for Device 1
+   Execute below command in command prompt.
+   cd Appium\node_modules\appium\bin
+   D:node appium.js -a localhost -p 4567 --udid 491f18f4 -bp 5556  --nodeconfig "D:\d1.json" -g "D:\appium_1.log" --session-override
+   Node is Registerd to hub will be displayed
+   To see in the ui http://localhost:4444/grid/console/#.
+
+
+11. Register to hub for Device 1
+   Execute below command in command prompt.
+   cd Appium\node_modules\appium\bin
+   D:node appium.js -a localhost -p 4568 --udid 42030213ccdfa100 -bp 5557  --nodeconfig "D:\d2.json" -g "D:\appium_2.log" --session-      override
+   Node is Registerd to hub will be displayed
+   To see in the ui http://localhost:4444/grid/console/#.
+
+12. Go to testng_parallel_exec.xml right click Run as Testng suite.
+    Execution will happen parallely
+
+13. Go to testng_sequence.xml right click Run as Testng suite.
+    Execution will happen Sequentially
